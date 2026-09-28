@@ -10,7 +10,10 @@ import { evaluate, evaluateAsync, getClient } from '../connection.js';
 // TV renamed the right-rail button: current builds use data-name="base" with
 // aria-label "Watchlist, details, and news"; older builds used
 // data-name="base-watchlist-widget-button" / aria-label "Watchlist".
+// Procurar o data-name antes do aria-label: o aria-label vem traduzido (em pt-BR
+// é "Lista de observação e detalhes e notícias"), o data-name não.
 const WL_BUTTON_JS = `(document.querySelector('[data-name="base-watchlist-widget-button"]')
+  || document.querySelector('button[data-name="base"]')
   || document.querySelector('[aria-label="Watchlist, details, and news"]')
   || document.querySelector('[aria-label^="Watchlist"]'))`;
 
