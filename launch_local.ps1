@@ -21,6 +21,14 @@ $pkg = $pkg | Sort-Object Version -Descending | Select-Object -First 1
 $origem = $pkg.InstallLocation
 $nomePasta = Split-Path $origem -Leaf
 
+# 1b. Se o TradingView já está aberto COM a porta, não há nada a fazer (não o fechar: pode haver trabalho a meio).
+$jaAberto = Get-NetTCPConnection -LocalPort $Porta -State Listen -ErrorAction SilentlyContinue |
+    Where-Object { (Get-Process -Id $_.OwningProcess -ErrorAction SilentlyContinue).ProcessName -eq 'TradingView' }
+if ($jaAberto) {
+    Write-Host "OK: o TradingView já está aberto com CDP na porta $Porta — nada a fazer."
+    exit 0
+}
+
 # 2. Garantir a cópia local desta versão; apagar cópias de versões antigas.
 $raiz = Join-Path $env:LOCALAPPDATA 'tradingview-mcp'
 $destino = Join-Path $raiz $nomePasta
